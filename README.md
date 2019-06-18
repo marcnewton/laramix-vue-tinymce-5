@@ -1,9 +1,11 @@
 # laramix-vue-tinymce-5
 Self hosted TinyMCE ^5.0.8 for Vue ^2.6.10 using Laravel Mix ^4.0.15
 
-Dont bother trying to use ES5/6 imports, it simply does not work.
+> Don't bother trying to use ES5/6 imports, it simply does not work, other solutions do not work in `modals` or `v-if` directives.
 
-Works when used in modals such as Vuetify Modals.
+This setup method works when used with `modals` and `v-if` directive.
+
+# Installation
 
 ```sh
 yarn add --dev tinymce
