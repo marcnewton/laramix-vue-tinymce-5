@@ -10,7 +10,19 @@
 
         name: 'v-editor',
 
-        props: ['value'],
+        props: {
+
+            value: {
+                type: String,
+                default: () => (''),
+            },
+
+            options: {
+                type: Object,
+                default: () => ({})
+            }
+
+        },
 
         data: () => ({
 
@@ -22,33 +34,35 @@
 
             let self = this;
 
-            if(self.instance == null) {
+            if (self.instance == null) {
 
-                window.tinyMCE.init({
-
+                const defaults = {
                     target: self.$el
+                };
 
-                }).then(instance => {
+                window.tinyMCE
+                    .init({...defaults, ...self.options})
+                    .then(instance => {
 
-                    self.instance = instance[0];
+                        self.instance = instance[0];
 
-                    self.instance.setContent(self.value);
+                        self.instance.setContent(self.value);
 
-                    self.instance.on('Change keyup', () => {
+                        self.instance.on('Change keyup', () => {
 
-                        self.$emit('input', self.instance.getContent());
+                            self.$emit('input', self.instance.getContent());
+
+                        });
 
                     });
-
-                });
 
             }
 
         },
 
-        beforeDestroy () {
+        beforeDestroy() {
 
-            if(this.instance != null) {
+            if (this.instance != null) {
 
                 this.instance.destroy();
 
