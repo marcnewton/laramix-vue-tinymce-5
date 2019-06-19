@@ -10,23 +10,12 @@
 
         name: 'v-editor',
 
-        props: {
-
-            value: {
-                type: String,
-                default: () => (''),
-            },
-
-            options: {
-                type: Object,
-                default: () => ({})
-            }
-
-        },
+        props: ['value'],
 
         data: () => ({
 
-            instance: null
+            instance: null,
+            timeout: null,
 
         }),
 
@@ -34,15 +23,15 @@
 
             let self = this;
 
-            if (self.instance == null) {
+            if(self.instance == null || self.instance.destroyed) {
 
-                const defaults = {
-                    target: self.$el
-                };
+                self.timeout = setTimeout(function () {
 
-                window.tinyMCE
-                    .init({...defaults, ...self.options})
-                    .then(instance => {
+                    window.tinyMCE.init({
+
+                        target: self.$el
+
+                    }).then(instance => {
 
                         self.instance = instance[0];
 
@@ -56,15 +45,24 @@
 
                     });
 
+                }, 500);
+
             }
 
         },
 
-        beforeDestroy() {
+        beforeDestroy () {
 
-            if (this.instance != null) {
+            if(this.timeout != null) {
+
+                clearTimeout(this.timeout);
+
+            }
+
+            if(this.instance != null) {
 
                 this.instance.destroy();
+                this.$el.innerHTML = '';
 
             }
 
